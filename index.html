@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal To-Do List</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2em; }
+        .container { max-width: 800px; margin: auto; }
+        .task-list { list-style-type: none; padding: 0; }
+        .task-item { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 5px; }
+        .task-item.completed { background-color: #e0ffe0; text-decoration: line-through; }
+        .task-item h3 { margin-top: 0; }
+        .form-container { margin-bottom: 2em; }
+        .btn { padding: 5px 10px; text-decoration: none; color: white; border-radius: 3px; }
+        .btn-complete { background-color: #28a745; }
+        .btn-delete { background-color: #dc3545; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My To-Do List</h1>
+        
+        <!-- Form to Add New Task -->
+        <div class="form-container">
+            <h2>Add a New Task</h2>
+            <form action="{{ url_for('add_task') }}" method="POST">
+                <input type="text" name="title" placeholder="Task Title" required><br><br>
+                <input type="text" name="description" placeholder="Description"><br><br>
+                <input type="text" name="category" placeholder="Category (e.g., Work)"><br><br>
+                <button type="submit">Add Task</button>
+            </form>
+        </div>
+
+        <!-- List of Tasks -->
+        <h2>Tasks</h2>
+        <ul class="task-list">
+            {% for task in tasks %}
+            <li class="task-item {% if task.completed %}completed{% endif %}">
+                <h3>{{ task.title }}</h3>
+                <p><strong>Category:</strong> {{ task.category }}</p>
+                <p>{{ task.description }}</p>
+                
+                {% if not task.completed %}
+                <a href="{{ url_for('complete_task', task_id=loop.index0) }}" class="btn btn-complete">Complete</a>
+                {% endif %}
+                <a href="{{ url_for('delete_task', task_id=loop.index0) }}" class="btn btn-delete">Delete</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
